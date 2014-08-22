@@ -3,7 +3,7 @@ namespace Faberyx\Formstrap;
  
 use Config;
 use View;
-use App;
+
 class Validation {
 
 	/**
@@ -102,14 +102,14 @@ class Validation {
 
 	public function with($rule){
  
-		App::make("debugbar")->info($rule);
-
+		
 		return $this;
 	}
 
 	public function validate()
     {
-    	
+    	$this->setrules();
+
         return View::make($this->scriptview,array(
             'rules'   =>  $this->bootstrapvalidationrules
             
