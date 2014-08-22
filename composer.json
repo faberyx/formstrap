@@ -1,0 +1,23 @@
+{
+    "name": "faberyx/formstrap",
+    "description": "",
+    "authors": [
+        {
+            "name": "faberyx",
+            "email": "fabrizio.catitti@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0",
+        "illuminate/support": "4.2.*"
+    },
+    "autoload": {
+        "classmap": [
+            "src/migrations"
+        ],
+        "psr-0": {
+            "Faberyx\\Formstrap\\": "src/"
+        }
+    },
+    "minimum-stability": "stable"
+}
