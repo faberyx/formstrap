@@ -1,9 +1,8 @@
 <?php 
 namespace Faberyx\Formstrap;
  
-use Config;
-use View;
-
+//use View;
+//use App;
 class Validation {
 
 	/**
@@ -37,24 +36,46 @@ class Validation {
      */
     protected $scriptview;
 
+    /**
+     * Illuminate view environment.
+     *
+     * @var Illuminate\View\Environment
+     */
+    protected $view;
 
-    function __construct($validationrules)
+    /**
+     * Illuminate config repository.
+     *
+     * @var Illuminate\Config\Repository
+     */
+    protected $config;
+
+	/**
+     * Create a new validation instance.
+     *
+     * @param  Illuminate\View\Environment  $view
+     * @param  Illuminate\Config\Repository  $config
+     * @return void
+     */
+    public function __construct($view, $config)
     {
-        $this->ruletranslation = Config::get('formstrap::validationtranslations');
-        $this->regextranslation = Config::get('formstrap::validationregex');
-        $this->scriptview = Config::get('formstrap::scriptview');
-     	$this->validationrules = $validationrules;   
+        $this->view = $view;
+        $this->config = $config;    	
+        $this->ruletranslation = $config->get('formstrap::validationtranslations');
+        $this->regextranslation = $config->get('formstrap::validationregex');
+        $this->scriptview = $config->get('formstrap::scriptview');     	
     }
 
  
-	public function setrules(){
+	public function setrules($validationrules){
+
  
  		$bootstrapvalidationrules = array();
 		// Parse the rules according to Laravel conventions
-		if (isset($this->validationrules)){
-
-			foreach ($this->validationrules as $name => $fieldRules) {
-				
+		if (isset($validationrules)){
+ 
+			foreach ($validationrules as $name => $fieldRules) {
+ 
 				$expFieldRules = $fieldRules;
 				
 				if (!is_array($expFieldRules)) {
@@ -71,7 +92,7 @@ class Validation {
 						$param = substr($rule, $colon + 1);
 						$rule = substr($rule, 0, $colon);	
 					}	
-					
+
 					if (isset($this->ruletranslation[$rule])){
 					
 						if (($colon = strpos($this->ruletranslation[$rule], '|')) !== false) {
@@ -88,8 +109,9 @@ class Validation {
 							}
 					
 							$bootstrapvalidationrules[$name][$ex[0]] = $parameters;
-					
+					 
 						}else{
+							
 							$bootstrapvalidationrules[$name][$this->ruletranslation[$rule]] = 'enabled:true';
 						} 
 				
@@ -97,22 +119,22 @@ class Validation {
 				}
 			}
 		}
+
 		$this->bootstrapvalidationrules = $bootstrapvalidationrules;
+		
 	}
 
 	public function with($rule){
  
-		
+ 
 		return $this;
 	}
 
-	public function validate()
+	public function make()
     {
-    	$this->setrules();
-
-        return View::make($this->scriptview,array(
-            'rules'   =>  $this->bootstrapvalidationrules
-            
+    	
+    	return $this->view->make($this->scriptview,array(
+            'rules'   =>  $this->bootstrapvalidationrules            
         ));
     }
  

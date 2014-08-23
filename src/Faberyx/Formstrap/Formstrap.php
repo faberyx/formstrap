@@ -1,53 +1,66 @@
 <?php 
 namespace Faberyx\Formstrap;
  
- use App;
  
+use App; 
 class Formstrap {
 
-		 
 
-    function __construct()
-    {
-       
-    }
-
-	/**
-     * @return Validation
+    /**
+     * validation class.
+     *
+     * @var Faberyx\Formstrap\Validation
      */
-    public function validation($rules)
+    protected $validation;		
+    
+
+
+    /**
+     * utils class.
+     *
+     * @var Faberyx\Formstrap\Validation
+     */
+    protected $utils;  
+
+    /**
+     * Illuminate view environment.
+     *
+     * @var Illuminate\View\Environment
+     */
+    protected $view;
+
+    /**
+     * Illuminate config repository.
+     *
+     * @var Illuminate\Config\Repository
+     */
+    protected $config;
+
+    /**
+     * Create a new profiler instance.
+     *
+     * @param  Illuminate\View\Environment  $view
+     * @param  Illuminate\Config\Repository  $config
+     * @return void
+     */
+    public function __construct($view,  $config, $validation, $utils)
     {
-	 	
-	 	return new Validation($rules);		
+        $this->view = $view;
+        $this->config = $config;
+        $this->validation = $validation;
+        $this->utils = $utils;
     }
 
-    public function filesize($bytes) { 
+
    
-        if ($bytes >= 1073741824)
-        {
-            $bytes = number_format($bytes / 1073741824, 2) . ' GB';
-        }
-        elseif ($bytes >= 1048576)
-        {
-            $bytes = number_format($bytes / 1048576, 2) . ' MB';
-        }
-        elseif ($bytes >= 1024)
-        {
-            $bytes = number_format($bytes / 1024, 2) . ' KB';
-        }
-        elseif ($bytes > 1)
-        {
-            $bytes = $bytes . ' bytes';
-        }
-        elseif ($bytes == 1)
-        {
-            $bytes = $bytes . ' byte';
-        }
-        else
-        {
-            $bytes = '0 bytes';
-        }
+    public function validation(){
 
-        return $bytes;
-    }
+        return $this->validation;
+    }    
+
+   
+    public function utils(){
+
+        return $this->utils;
+    }      
 }

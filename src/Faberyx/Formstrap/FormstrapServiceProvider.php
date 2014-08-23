@@ -32,10 +32,31 @@ class FormstrapServiceProvider extends ServiceProvider {
 	public function register()
 	{
 		//
-		$this->app['formstrap'] = $this->app->share(function($app)
-		{
-		    return new Formstrap;
+
+		$this->app->bind('formstrap.validation', function($app)  {
+		    return new Validation(
+		    	$app['view'], 
+	        	$app['config']);
 		});
+
+		//$this->app->bind('formstrap.utils', function($app)  {
+		//    return new Utils(
+	    //    	$app['config']);
+		//});
+
+	    $this->app['formstrap'] = $this->app->share(function($app)
+	    {
+	        return new Formstrap(
+	        	$app['view'], 
+	        	$app['config'], 
+	        	$app->make('formstrap.validation'),
+	        	new Utils
+        	);
+	    });
+
+
+
+		
 	}
 
 	/**
